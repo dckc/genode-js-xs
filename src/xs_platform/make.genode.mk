@@ -17,16 +17,13 @@
 #   along with the Moddable SDK Tools.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-PKGCONFIG = $(shell which pkg-config)
-GLIB_COMPILE_RESOURCES = $(shell $(PKGCONFIG) --variable=glib_compile_resources gio-2.0)
-
 ifeq ($(DEBUG),1)
-	LIB_DIR = $(BUILD_DIR)/tmp/lin/debug/lib
+	LIB_DIR = $(BUILD_DIR)/tmp/genode/debug/lib
 else
 	ifeq ($(INSTRUMENT),1)
-		LIB_DIR = $(BUILD_DIR)/tmp/lin/instrument/lib
+		LIB_DIR = $(BUILD_DIR)/tmp/genode/instrument/lib
 	else
-		LIB_DIR = $(BUILD_DIR)/tmp/lin/release/lib
+		LIB_DIR = $(BUILD_DIR)/tmp/genode/release/lib
 	endif
 endif
 
@@ -36,7 +33,7 @@ XS_DIRECTORIES = \
 	$(XS_DIR)/sources
 
 XS_HEADERS = \
-	$(XS_DIR)/platforms/lin_xs.h \
+	$(XS_DIR)/platforms/wasm_xs.h \
 	$(XS_DIR)/platforms/xsPlatform.h \
 	$(XS_DIR)/includes/xs.h \
 	$(XS_DIR)/includes/xsmc.h \
@@ -45,7 +42,8 @@ XS_HEADERS = \
 	$(XS_DIR)/sources/xsScript.h
 
 XS_OBJECTS = \
-	$(LIB_DIR)/lin_xs.c.o \
+	$(LIB_DIR)/genode.c.o \
+	$(LIB_DIR)/wasm_xs.c.o \
 	$(LIB_DIR)/xsAll.c.o \
 	$(LIB_DIR)/xsAPI.c.o \
 	$(LIB_DIR)/xsArguments.c.o \
@@ -95,7 +93,7 @@ HEADERS += $(XS_HEADERS)
 C_DEFINES = \
 	-DXS_ARCHIVE=1 \
 	-DINCLUDE_XSPLATFORM=1 \
-	-DXSPLATFORM=\"lin_xs.h\" \
+	-DXSPLATFORM=\"wasm_xs.h\" \
 	-DmxRun=1 \
 	-DmxParse=1 \
 	-DmxNoFunctionLength=1 \
@@ -108,7 +106,9 @@ endif
 C_INCLUDES += $(DIRECTORIES)
 C_INCLUDES += $(foreach dir,$(XS_DIRECTORIES) $(TMP_DIR),-I$(dir))
 
-XS_C_FLAGS = -fPIC -shared -c $(shell $(PKGCONFIG) --cflags gio-2.0) $(shell $(PKGCONFIG) --cflags libprotobuf-c)
+C_INCLUDES += $(CPPFLAGS)
+
+XS_C_FLAGS = -c $(CFLAGS)
 ifeq ($(DEBUG),)
 	XS_C_FLAGS += -D_RELEASE=1 -O3
 else
@@ -117,10 +117,10 @@ else
 endif
 C_FLAGS = $(XS_C_FLAGS)
 
-LINK_LIBRARIES = -lm -lc $(shell $(PKGCONFIG) --libs gio-2.0)  $(shell $(PKGCONFIG) --libs libprotobuf-c)
+LINK_LIBRARIES = $(LDLIBS)
 
 # LINK_FLAGS = -arch i386
-LINK_FLAGS = -fPIC
+LINK_FLAGS = $(LDFLAGS)
 
 XSC = $(BUILD_DIR)/bin/lin/debug/xsc
 XSID = $(BUILD_DIR)/bin/lin/debug/xsid
@@ -136,18 +136,20 @@ all: $(LIB_DIR) $(BIN_DIR)/$(NAME)
 $(LIB_DIR):
 	mkdir -p $(LIB_DIR)
 
-apt-install:
-	echo Addendum to Getting Started for Protobuf serialization
-	sudo apt-get install libgtk-3-dev libprotobuf-c-dev
-
-$(TMP_DIR)/lin_xs_cli.c: $(XS_DIR)/platforms/lin_xs_cli.c
+$(TMP_DIR)/genode.c: $(XS_DIR)/platforms/genode.c
 	cp $^ $@
 
-$(TMP_DIR)/lin_xs_cli.o: $(TMP_DIR)/lin_xs_cli.c $(TMP_DIR)/mc.xs.h $(XS_HEADERS)
-	@echo "# copy" $(<F)
-	$(CC) $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) $< -o $@
+$(TMP_DIR)/wasm_xs.c: $(XS_DIR)/platforms/wasm_xs.c
+	cp $^ $@
 
-$(BIN_DIR)/$(NAME): $(TMP_DIR)/lin_xs_cli.o $(XS_OBJECTS) $(TMP_DIR)/mc.xs.c.o $(TMP_DIR)/mc.resources.c.o $(OBJECTS)
+$(TMP_DIR)/genode_main.cc: $(XS_DIR)/platforms/genode_main.cc
+	cp $^ $@
+
+$(TMP_DIR)/genode_main.o: $(TMP_DIR)/genode_main.cc
+	@echo "# cxx genode_main.cc"
+	$(CXX) $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) $< -o $@
+
+$(BIN_DIR)/$(NAME): $(TMP_DIR)/genode_main.o $(XS_OBJECTS) $(TMP_DIR)/mc.xs.c.o $(TMP_DIR)/mc.resources.c.o $(OBJECTS)
 	@echo "# cc" $(@F)
 	$(CC) $(LINK_FLAGS) $^ $(LINK_LIBRARIES) -o $@
 
@@ -159,6 +161,8 @@ $(LIB_DIR)/%.c.o: %.c
 $(TMP_DIR)/mc.xs.c.o: $(TMP_DIR)/mc.xs.c $(HEADERS)
 	@echo "# cc" $(<F)
 	$(CC) $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) $< -o $@
+
+xs_link: $(TMP_DIR)/mc.xs.c $(TMP_DIR)/mc.xs.h
 
 $(TMP_DIR)/mc.xs.c $(TMP_DIR)/mc.xs.h: $(MODULES) $(MANIFEST)
 	@echo "# xsl modules"
