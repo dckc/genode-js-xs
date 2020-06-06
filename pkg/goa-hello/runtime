@@ -1,0 +1,16 @@
+<runtime ram="10M" caps="100" binary="goa-hello">
+  <config>
+    <libc stdout="/dev/log" stderr="/dev/log"/>
+    <vfs>
+      <dir name="dev">
+        <log/>
+      </dir>
+    </vfs>
+  </config>
+  <content>
+    <rom label="goa-hello"/>
+    <rom label="libc.lib.so"/>
+    <rom label="libm.lib.so"/>
+    <rom label="vfs.lib.so"/>
+  </content>
+</runtime>

@@ -8,6 +8,10 @@ Then I grabbed the
 example from the Moddable XS SDK, generated C sources, and got it to
 build.
 
+Then I worked out getting `goa run` to work. My `artifacts` is
+a bit of a kludge: it reaches out from `var/build` back to `src/bin`.
+
+
 ## Respin
 
 ```
