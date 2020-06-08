@@ -57,3 +57,12 @@ or for debugging:
 ```
 make -C src respin && goa build --verbose --jobs 1
 ```
+
+
+## Next Steps
+
+  - **event loop**: Figure out how to integrate the [port of glib to
+    genode](https://github.com/genodelabs/genode-world/blob/master/ports/glib.port)
+    to turn the event loop, which is currently commented out, back on.
+
+  - **nix and dhall**: Compare goa to [genodepkgs](https://git.sr.ht/~ehmry/genodepkgs)
