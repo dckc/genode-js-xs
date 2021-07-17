@@ -1,0 +1,3 @@
+[submodule "vendor/moddable"]
+	path = vendor/moddable
+	url = https://github.com/Moddable-OpenSource/moddable.git
