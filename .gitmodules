@@ -1,3 +1,6 @@
 [submodule "vendor/moddable"]
 	path = vendor/moddable
 	url = https://github.com/Moddable-OpenSource/moddable.git
+[submodule "vendor/goa"]
+	path = vendor/goa
+	url = https://github.com/nfeske/goa.git
