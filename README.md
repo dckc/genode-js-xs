@@ -1,4 +1,8 @@
-# goa-hello: toward JavaScript on genode using Moddable XS
+# Toward JavaScript on genode using Moddable XS
+
+Video companion:
+
+ 1. [JavaScript on the Genode Microkernel OS, part 1: hello genode \- Twitch](https://www.twitch.tv/videos/1090280743)
 
 It works like this, once it's built (see below):
 
