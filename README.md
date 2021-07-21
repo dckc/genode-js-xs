@@ -1,72 +1,119 @@
 # Toward JavaScript on genode using Moddable XS
 
-Video companion:
-
- 1. [JavaScript on the Genode Microkernel OS, part 1: hello genode \- Twitch](https://www.twitch.tv/videos/1090280743)
-
-It works like this, once it's built (see below):
+To run `src/main.js` using [xst][] from the [Moddable SDK][sdk],
+we `goa build` (see below) and then:
 
 ```
-goa-hello$ goa run
-[goa-hello:make] recursive make: make
-Genode 20.02-1-gac1b2ec24e
+genode-js-xs$ goa run
+[genode-js-xs:make] BUILD_DIR=/home/connolly/projects/genode-js-xs/var/build/x86_64
+[genode-js-xs:make] MODDABLE=/home/connolly/projects/genode-js-xs/vendor/moddable
+make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
+Genode sculpt-21.03-24-g704bd0695f8 <local changes>
 17592186044415 MiB RAM and 8997 caps assigned to init
-[init -> goa-hello] Hello before libc
-[init -> goa-hello] hello via stdio
-[init -> goa-hello] Hello in libc
-[init -> goa-hello] lin_xs_cli: loading top-level main.js
-[init -> goa-hello]  lin_xs_cli: loaded
-[init -> goa-hello] lin_xs_cli: invoking main(argv)
-[init -> goa-hello] Hello, world - sample
-[init -> goa-hello] main() returned immediate value (not a promise). exiting
-[init -> goa-hello] Warning: rtc not configured, returning 0
-Warning: blocking canceled in entrypoint constructor
-[init] child "goa-hello" exited with exit value 0
+[init -> genode-js-xs] Hello, world - sample
+[init -> genode-js-xs] 
+[init -> genode-js-xs] 123
+[init] child "genode-js-xs" exited with exit value 0
 ```
 
-I started with the hello package from then [Nov 2019 article
-introducing goa](https://genodians.org/nfeske/2019-11-25-goa).
+[xst]: https://github.com/Moddable-OpenSource/moddable/blob/public/documentation/xs/xst.md
+[sdk]: https://github.com/Moddable-OpenSource/moddable#readme
 
-Then I grabbed the
-[helloworld](https://github.com/Moddable-OpenSource/moddable/tree/public/examples/helloworld)
-example from the Moddable XS SDK, generated C sources, and got it to
-build.
+## Background: `goa build`
 
-Then I worked out getting `goa run` to work. My `artifacts` is
-a bit of a kludge: it reaches out from `var/build` back to `src/bin`.
+ - [Goa \- streamlining the development of Genode applications](https://genodians.org/nfeske/2019-11-25-goa)  
+   Nov 2019 by Norman Feske
+   - live coding: [JavaScript on the Genode Microkernel OS, part 1: hello genode \- Twitch](https://www.twitch.tv/videos/1090280743)
+     - 1st 7 min: live coding
+     - second half: a bit of explanation.
 
-## before `goa build`: `gensrc`, `genode_platform`
+## Building from source
 
-There's a bit of an impedence mismatch between `goa build` and the
-[Moddable SDK](https://github.com/Moddable-OpenSource/moddable/), so
-use `make -C src gensrc` to generate C etc. before running `goa
-build`.
+To get `vendor/goa` and `vendor/moddable`:
 
-We also extend the Moddable SDK to add a `genode` platform
-using `make -C src genode_platform`.
-
-
-## Respin workflow
-
-The several layers of build directories and makefiles means the
-dependencies are easy to get out of date, so the `respin`
-target does `realclean` before the rest:
-
-```
-make -C src respin && goa build
+```sh
+git submodule update
+export PATH=vendor/goa/bin:$PATH
 ```
 
-or for debugging:
+Then apply `vendor/moddable-xst.patch`. (see
+[issues/8](https://github.com/dckc/genode-js-xs/issues/8)).
+
+
+When we `goa build`, we see some harmless compiler warnings from XS.
+And we get linker warnings (see [Issue \#9](https://github.com/dckc/genode-js-xs/issues/9)).
 
 ```
-make -C src respin && goa build --verbose --jobs 1
+genode-js-xs$ goa build
+download nfeske/api/base/2021-02-22.tar.xz
+download nfeske/api/base/2021-02-22.tar.xz.sig
+download nfeske/api/libc/2021-02-22.tar.xz
+download nfeske/api/libc/2021-02-22.tar.xz.sig
+download nfeske/api/posix/2020-05-17.tar.xz
+download nfeske/api/posix/2020-05-17.tar.xz.sig
+[genode-js-xs:make] BUILD_DIR=/home/connolly/projects/genode-js-xs/var/build/x86_64
+[genode-js-xs:make] MODDABLE=/home/connolly/projects/genode-js-xs/vendor/moddable
+make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
+[genode-js-xs:make] # xst debug : cc xsAll.c
+genode-x86-gcc: warning: .../libgcc.a: linker input file unused because linking not done
+[genode-js-xs:make] # xst debug : cc xsAPI.c
+...
+.../vendor/moddable/xs/tools/yaml/api.c:1147:7: warning: variable ‘context’ set but not used [-Wunused-but-set-variable]
+     } context;
+       ^~~~~~~
+...
+[genode-js-xs:make] # xst release : cc xst
 ```
 
+The first `goa run` involves downloading various genode archives:
 
-## Next Steps
-
-  - **event loop**: Figure out how to integrate the [port of glib to
-    genode](https://github.com/genodelabs/genode-world/blob/master/ports/glib.port)
-    to turn the event loop, which is currently commented out, back on.
-
-  - **nix and dhall**: Compare goa to [genodepkgs](https://git.sr.ht/~ehmry/genodepkgs)
+```
+connolly@jambox:~/projects/genode-js-xs$ goa run
+[genode-js-xs:make] BUILD_DIR=/home/connolly/projects/genode-js-xs/var/build/x86_64
+[genode-js-xs:make] MODDABLE=/home/connolly/projects/genode-js-xs/vendor/moddable
+make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
+download nfeske/bin/x86_64/base-linux/2021-06-08.tar.xz
+download nfeske/bin/x86_64/base-linux/2021-06-08.tar.xz.sig
+download nfeske/bin/x86_64/init/2021-02-22.tar.xz
+download nfeske/bin/x86_64/init/2021-02-22.tar.xz.sig
+download nfeske/bin/x86_64/libc/2021-02-22.tar.xz
+download nfeske/bin/x86_64/libc/2021-02-22.tar.xz.sig
+download nfeske/bin/x86_64/posix/2021-02-22.tar.xz
+download nfeske/bin/x86_64/posix/2021-02-22.tar.xz.sig
+download nfeske/bin/x86_64/vfs/2021-02-22.tar.xz
+download nfeske/bin/x86_64/vfs/2021-02-22.tar.xz.sig
+download nfeske/src/base-linux/2021-06-08.tar.xz
+download nfeske/src/base-linux/2021-06-08.tar.xz.sig
+download nfeske/src/init/2021-02-22.tar.xz
+download nfeske/src/init/2021-02-22.tar.xz.sig
+download nfeske/src/libc/2021-02-22.tar.xz
+download nfeske/src/libc/2021-02-22.tar.xz.sig
+download nfeske/src/posix/2021-02-22.tar.xz
+download nfeske/src/posix/2021-02-22.tar.xz.sig
+download nfeske/src/vfs/2021-02-22.tar.xz
+download nfeske/src/vfs/2021-02-22.tar.xz.sig
+download nfeske/api/block_session/2020-05-26.tar.xz
+download nfeske/api/block_session/2020-05-26.tar.xz.sig
+download nfeske/api/file_system_session/2020-05-26.tar.xz
+download nfeske/api/file_system_session/2020-05-26.tar.xz.sig
+download nfeske/api/os/2021-02-22.tar.xz
+download nfeske/api/os/2021-02-22.tar.xz.sig
+download nfeske/api/report_session/2020-03-25.tar.xz
+download nfeske/api/report_session/2020-03-25.tar.xz.sig
+download nfeske/api/rtc_session/2020-03-25.tar.xz
+download nfeske/api/rtc_session/2020-03-25.tar.xz.sig
+download nfeske/api/so/2020-05-17.tar.xz
+download nfeske/api/so/2020-05-17.tar.xz.sig
+download nfeske/api/terminal_session/2020-04-16.tar.xz
+download nfeske/api/terminal_session/2020-04-16.tar.xz.sig
+download nfeske/api/timer_session/2020-10-08.tar.xz
+download nfeske/api/timer_session/2020-10-08.tar.xz.sig
+download nfeske/api/vfs/2020-11-26.tar.xz
+download nfeske/api/vfs/2020-11-26.tar.xz.sig
+Genode sculpt-21.03-24-g704bd0695f8 <local changes>
+17592186044415 MiB RAM and 8997 caps assigned to init
+[init -> genode-js-xs] Hello, world - sample
+[init -> genode-js-xs] 
+[init -> genode-js-xs] 123
+[init] child "genode-js-xs" exited with exit value 0
+```
