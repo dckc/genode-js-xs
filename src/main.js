@@ -1,5 +1,6 @@
-export default function main() {
+function main() {
     let message = "Hello, world - sample";
-    trace(message + "\n");
+    print(message + "\n");
 }
 
+main();

@@ -1,41 +1,35 @@
-MODDABLE=~/projects/moddable
-VERBOSE=0
+BUILD_DIR=$(realpath .)
+MODDABLE=$(realpath $(BUILD_DIR)/../../../vendor/moddable)
+VERBOSE=1
+PLATFORM=lin
+GOAL=debug
+
+# avoid setting mxMacOSX=1 by default, which results in:
+# xsString.c:42:11: fatal error: CoreServices/CoreServices.h: No such file or directory
+HINTS = -Dlinux=1
 
 # `goa build` sets up all sorts of CPPFLAGS (-I...) and such; pass them to the xs makefile
 # https://www.gnu.org/software/make/manual/html_node/Variables_002fRecursion.html#Variables_002fRecursion
-export CPPFLAGS CFLAGS LDFLAGS LDLIBS CXX CC VERBOSE
+export CPPFLAGS LIB_SRC CFLAGS LDFLAGS LDLIBS CXX CC VERBOSE GOAL BUILD_DIR MODDABLE
 
-XS_GENSRC=./tmp/genode/debug/src
+# target is $(BUILD_DIR)/bin/$(PLATFORM)/$(GOAL)/xst
+# but this Makefile doesn't know the dependencies,
+# so always use the xs makefile.
+
+# passing CPPFLAGS and such via `make CC=...` seems awkward
+# but it was the only way I could get it to work.
+
+# See also ../vendor/moddable-xst.patch
+# for changes to LIBRARIES, LINK_OPTIONS
+
 build:
-	echo recursive make: $(MAKE)
-	MODDABLE=$(MODDABLE) $(MAKE) -e -C $(XS_GENSRC) NAME=goa-hello
+	@echo BUILD_DIR=$(BUILD_DIR)
+	@echo MODDABLE=$(MODDABLE)
+	make -C $(MODDABLE)/xs/makefiles/$(PLATFORM) \
+		CC="$(CC) $(CPPFLAGS) $(HINTS) $(LDFLAGS) $(LDLIBS)"
 
-HERE=$(shell /bin/pwd)
-
-# Generate C code etc. for hello world xs app.
-gensrc: $(XS_GENSRC)/makefile
-$(XS_GENSRC)/makefile: $(MODDABLE)/.envrc manifest.json
-	. $(MODDABLE)/.envrc && mcconfig -p genode -d -o .
-	make -C $(XS_GENSRC) genode.c wasm_xs.c xs_link
-
-# add the genode platform to the Moddable SDK
-genode_platform: $(MODDABLE)/xs/platforms/genode.c \
-			$(MODDABLE)/xs/platforms/genode_main.cc \
-			$(MODDABLE)/tools/mcconfig/make.genode.mk
-$(MODDABLE)/xs/platforms/genode.c: xs_platform/genode.c
-	cp $< $@
-$(MODDABLE)/xs/platforms/genode_main.cc: xs_platform/genode_main.cc
-	cp $< $@
-$(MODDABLE)/tools/mcconfig/make.genode.mk: xs_platform/make.genode.mk
-	cp $< $@
+what-env-might-help:
+	env | grep genode-js-xs
 
 clean:
 	rm -rf var/build/x86_64/tmp
-
-respin: realclean genode_platform gensrc
-
-realclean: clean
-	rm -rf bin tmp
-	rm -rf ~/projects/moddable/build/tmp
-	rm -f $(MODDABLE)/xs/platforms/genode*.*
-	rm -f $(MODDABLE)/tools/mcconfig/make.genode.mk

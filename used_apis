@@ -1,2 +1,6 @@
+# nfeske=https://github.com/genodelabs/genode/tree/master/depot/nfeske
+#  -> https://depot.genode.org/nfeske/
 nfeske/api/base
 nfeske/api/libc
+nfeske/api/posix
+

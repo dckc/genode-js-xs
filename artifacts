@@ -1,1 +1,2 @@
-../../../src/bin/genode/debug/src/goa-hello
+bin/lin/debug/xst
+main.js
