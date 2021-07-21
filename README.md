@@ -33,7 +33,7 @@ To get `vendor/goa` and `vendor/moddable`:
 
 ```sh
 git submodule update
-export PATH=vendor/goa/bin:$PATH
+export PATH=$PWD/vendor/goa/bin:$PATH
 ```
 
 Then apply `vendor/moddable-xst.patch`. (see
