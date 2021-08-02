@@ -1,2 +1,2 @@
-bin/lin/debug/xst
+bin/genode/debug/hello/hello
 main.js
