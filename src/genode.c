@@ -82,3 +82,10 @@ int main(int argc, char* argv[])  // here
 	xsDeleteMachine(machine);
 	return error;
 }
+
+// Local Variables:
+// tab-width: 4
+// c-basic-offset: 4
+// indent-tabs-mode: t
+// End:
+// vim: noet ts=4 sw=4
