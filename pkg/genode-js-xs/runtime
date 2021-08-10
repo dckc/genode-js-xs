@@ -1,8 +1,9 @@
 <runtime ram="300M" caps="100" binary="hello">
-  <config>
-    <libc stdout="/dev/log" stderr="/dev/log"/>
+  <config verbose="yes">
+    <libc stdout="/dev/log" stderr="/dev/log" rtc="/dev/null" />
     <vfs>
       <dir name="dev">
+        <null/>
         <log/>
       </dir>
     </vfs>
