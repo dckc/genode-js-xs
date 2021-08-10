@@ -42,6 +42,7 @@ XS_HEADERS = \
 	$(XS_DIR)/sources/xsScript.h
 
 XS_OBJECTS = \
+	$(LIB_DIR)/genode_construct.cpp.o \
 	$(LIB_DIR)/genode.c.o \
 	$(LIB_DIR)/xsAll.c.o \
 	$(LIB_DIR)/xsAPI.c.o \
@@ -136,6 +137,10 @@ all: $(LIB_DIR) $(BIN_DIR)/$(NAME)
 
 $(LIB_DIR):
 	mkdir -p $(LIB_DIR)
+
+$(LIB_DIR)/genode_construct.cpp.o: $(BUILD_DIR)/genode_construct.cpp
+	@echo "# cc" $(<F)
+	$(CC) $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) $< -o $@
 
 $(LIB_DIR)/genode.c.o: $(BUILD_DIR)/genode.c $(TMP_DIR)/mc.xs.h
 	@echo "# cc" $(<F)

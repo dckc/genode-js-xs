@@ -6,15 +6,11 @@
         <log/>
       </dir>
     </vfs>
-    <arg value="hello"/>
-    <arg value="main.js"/>
-    <arg value="inline.js"/>
   </config>
   <content>
     <rom label="hello"/>
     <rom label="libc.lib.so"/>
     <rom label="libm.lib.so"/>
-    <rom label="posix.lib.so"/>
     <rom label="vfs.lib.so"/>
   </content>
 </runtime>

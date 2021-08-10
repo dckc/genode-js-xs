@@ -56,4 +56,4 @@ what-env-might-help:
 	env | grep genode-js-xs
 
 clean:
-	rm -rf $(ROOT_DIR)/../var/build/x86_64/tmp
+	rm -rf $(ROOT_DIR)/../var/build/x86_64

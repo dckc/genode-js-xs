@@ -2,5 +2,3 @@
 #  -> https://depot.genode.org/nfeske/
 nfeske/api/base
 nfeske/api/libc
-nfeske/api/posix
-
