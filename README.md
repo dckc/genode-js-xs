@@ -8,11 +8,14 @@ genode-js-xs$ goa run
 [genode-js-xs:make] BUILD_DIR=/home/connolly/projects/genode-js-xs/var/build/x86_64
 [genode-js-xs:make] MODDABLE=/home/connolly/projects/genode-js-xs/vendor/moddable
 make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
-Genode sculpt-21.03-24-g704bd0695f8 <local changes>
+[genode-js-xs:make] # xsl modules
+### 572 instances, 453 keys, 61 colors, 20 holes
+Genode 20.02-1-gac1b2ec24e
 17592186044415 MiB RAM and 8997 caps assigned to init
 [init -> genode-js-xs] Hello, world - sample
-[init -> genode-js-xs] 
-[init -> genode-js-xs] 123
+[init -> genode-js-xs] Warning: rtc not configured, returning 0
+[init -> genode-js-xs] dog says bark
+Warning: blocking canceled in entrypoint constructor
 [init] child "genode-js-xs" exited with exit value 0
 ```
 
@@ -45,75 +48,81 @@ And we get linker warnings (see [Issue \#9](https://github.com/dckc/genode-js-xs
 
 ```
 genode-js-xs$ goa build
-download nfeske/api/base/2021-02-22.tar.xz
-download nfeske/api/base/2021-02-22.tar.xz.sig
-download nfeske/api/libc/2021-02-22.tar.xz
-download nfeske/api/libc/2021-02-22.tar.xz.sig
-download nfeske/api/posix/2020-05-17.tar.xz
-download nfeske/api/posix/2020-05-17.tar.xz.sig
+download nfeske/api/base/2020-02-27.tar.xz
+download nfeske/api/base/2020-02-27.tar.xz.sig
+...
 [genode-js-xs:make] BUILD_DIR=/home/connolly/projects/genode-js-xs/var/build/x86_64
 [genode-js-xs:make] MODDABLE=/home/connolly/projects/genode-js-xs/vendor/moddable
 make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
-[genode-js-xs:make] # xst debug : cc xsAll.c
-genode-x86-gcc: warning: .../libgcc.a: linker input file unused because linking not done
-[genode-js-xs:make] # xst debug : cc xsAPI.c
+[genode-js-xs:make] # xsc main.xsb
+[genode-js-xs:make] # cc xsArguments.c
+[genode-js-xs:make] # cc xsArray.c
 ...
-.../vendor/moddable/xs/tools/yaml/api.c:1147:7: warning: variable ‘context’ set but not used [-Wunused-but-set-variable]
-     } context;
-       ^~~~~~~
+[genode-js-xs:make] # xsl modules
+/home/connolly/projects/genode-js-xs/vendor/moddable/xs/sources/xsDebug.c:2211:20: warning: ‘xsInstrumentUnits’ defined but not used [-Wunused-const-variable=]
+ static char* const xsInstrumentUnits[xsInstrumentCount] ICACHE_XS6STRING_ATTR = {
+                    ^~~~~~~~~~~~~~~~~
 ...
-[genode-js-xs:make] # xst release : cc xst
+### 572 instances, 453 keys, 61 colors, 20 holes
+### 572 instances, 453 keys, 61 colors, 20 holes
+Total resource size: 0 bytes
+[genode-js-xs:make] # cc genode.c
+[genode-js-xs:make] # cc mc.resources.c
+[genode-js-xs:make] # cc mc.xs.c
+...
+[genode-js-xs:make] # cc hello
 ```
 
 The first `goa run` involves downloading various genode archives:
 
 ```
-connolly@jambox:~/projects/genode-js-xs$ goa run
+genode-js-xs$ goa run
 [genode-js-xs:make] BUILD_DIR=/home/connolly/projects/genode-js-xs/var/build/x86_64
 [genode-js-xs:make] MODDABLE=/home/connolly/projects/genode-js-xs/vendor/moddable
 make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
-download nfeske/bin/x86_64/base-linux/2021-06-08.tar.xz
-download nfeske/bin/x86_64/base-linux/2021-06-08.tar.xz.sig
-download nfeske/bin/x86_64/init/2021-02-22.tar.xz
-download nfeske/bin/x86_64/init/2021-02-22.tar.xz.sig
-download nfeske/bin/x86_64/libc/2021-02-22.tar.xz
-download nfeske/bin/x86_64/libc/2021-02-22.tar.xz.sig
-download nfeske/bin/x86_64/posix/2021-02-22.tar.xz
-download nfeske/bin/x86_64/posix/2021-02-22.tar.xz.sig
-download nfeske/bin/x86_64/vfs/2021-02-22.tar.xz
-download nfeske/bin/x86_64/vfs/2021-02-22.tar.xz.sig
-download nfeske/src/base-linux/2021-06-08.tar.xz
-download nfeske/src/base-linux/2021-06-08.tar.xz.sig
-download nfeske/src/init/2021-02-22.tar.xz
-download nfeske/src/init/2021-02-22.tar.xz.sig
-download nfeske/src/libc/2021-02-22.tar.xz
-download nfeske/src/libc/2021-02-22.tar.xz.sig
-download nfeske/src/posix/2021-02-22.tar.xz
-download nfeske/src/posix/2021-02-22.tar.xz.sig
-download nfeske/src/vfs/2021-02-22.tar.xz
-download nfeske/src/vfs/2021-02-22.tar.xz.sig
-download nfeske/api/block_session/2020-05-26.tar.xz
-download nfeske/api/block_session/2020-05-26.tar.xz.sig
-download nfeske/api/file_system_session/2020-05-26.tar.xz
-download nfeske/api/file_system_session/2020-05-26.tar.xz.sig
-download nfeske/api/os/2021-02-22.tar.xz
-download nfeske/api/os/2021-02-22.tar.xz.sig
-download nfeske/api/report_session/2020-03-25.tar.xz
-download nfeske/api/report_session/2020-03-25.tar.xz.sig
-download nfeske/api/rtc_session/2020-03-25.tar.xz
-download nfeske/api/rtc_session/2020-03-25.tar.xz.sig
-download nfeske/api/so/2020-05-17.tar.xz
-download nfeske/api/so/2020-05-17.tar.xz.sig
-download nfeske/api/terminal_session/2020-04-16.tar.xz
-download nfeske/api/terminal_session/2020-04-16.tar.xz.sig
-download nfeske/api/timer_session/2020-10-08.tar.xz
-download nfeske/api/timer_session/2020-10-08.tar.xz.sig
-download nfeske/api/vfs/2020-11-26.tar.xz
-download nfeske/api/vfs/2020-11-26.tar.xz.sig
-Genode sculpt-21.03-24-g704bd0695f8 <local changes>
+download nfeske/bin/x86_64/base-linux/2020-02-27.tar.xz
+download nfeske/bin/x86_64/base-linux/2020-02-27.tar.xz.sig
+download nfeske/bin/x86_64/init/2020-02-27.tar.xz
+download nfeske/bin/x86_64/init/2020-02-27.tar.xz.sig
+download nfeske/bin/x86_64/libc/2020-02-27.tar.xz
+download nfeske/bin/x86_64/libc/2020-02-27.tar.xz.sig
+download nfeske/bin/x86_64/posix/2020-02-27.tar.xz
+download nfeske/bin/x86_64/posix/2020-02-27.tar.xz.sig
+download nfeske/bin/x86_64/vfs/2020-02-27.tar.xz
+download nfeske/bin/x86_64/vfs/2020-02-27.tar.xz.sig
+download nfeske/src/base-linux/2020-02-27.tar.xz
+download nfeske/src/base-linux/2020-02-27.tar.xz.sig
+download nfeske/src/init/2020-02-27.tar.xz
+download nfeske/src/init/2020-02-27.tar.xz.sig
+download nfeske/src/libc/2020-02-27.tar.xz
+download nfeske/src/libc/2020-02-27.tar.xz.sig
+download nfeske/src/posix/2020-02-27.tar.xz
+download nfeske/src/posix/2020-02-27.tar.xz.sig
+download nfeske/src/vfs/2020-02-27.tar.xz
+download nfeske/src/vfs/2020-02-27.tar.xz.sig
+download nfeske/api/block_session/2020-02-27.tar.xz
+download nfeske/api/block_session/2020-02-27.tar.xz.sig
+download nfeske/api/file_system_session/2019-11-18.tar.xz
+download nfeske/api/file_system_session/2019-11-18.tar.xz.sig
+download nfeske/api/os/2020-02-27.tar.xz
+download nfeske/api/os/2020-02-27.tar.xz.sig
+download nfeske/api/report_session/2019-02-25.tar.xz
+download nfeske/api/report_session/2019-02-25.tar.xz.sig
+download nfeske/api/rtc_session/2019-08-20.tar.xz
+download nfeske/api/rtc_session/2019-08-20.tar.xz.sig
+download nfeske/api/so/2019-02-25.tar.xz
+download nfeske/api/so/2019-02-25.tar.xz.sig
+download nfeske/api/terminal_session/2019-02-25.tar.xz
+download nfeske/api/terminal_session/2019-02-25.tar.xz.sig
+download nfeske/api/timer_session/2019-11-25.tar.xz
+download nfeske/api/timer_session/2019-11-25.tar.xz.sig
+download nfeske/api/vfs/2020-02-27.tar.xz
+download nfeske/api/vfs/2020-02-27.tar.xz.sig
+Genode 20.02-1-gac1b2ec24e
 17592186044415 MiB RAM and 8997 caps assigned to init
 [init -> genode-js-xs] Hello, world - sample
-[init -> genode-js-xs] 
-[init -> genode-js-xs] 123
+[init -> genode-js-xs] Warning: rtc not configured, returning 0
+[init -> genode-js-xs] dog says bark
+Warning: blocking canceled in entrypoint constructor
 [init] child "genode-js-xs" exited with exit value 0
 ```
