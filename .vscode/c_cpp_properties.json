@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "defines": [],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "clang-x64"
+        },
+        {
+            "name": "genode",
+            "defines": [],
+            "includePath": [
+                "/usr/local/genode/tool/current/lib/gcc/x86_64-pc-elf/8.3.0/include",
+                "${workspaceFolder}/**"
+            ],
+            "compilerPath": "/usr/local/genode/tool/current/bin/genode-x86-gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "gcc-x86"
+        }
+    ],
+    "version": 4
+}

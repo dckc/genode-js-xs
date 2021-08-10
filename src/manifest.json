@@ -1,8 +1,35 @@
 {
-	"include": "$(MODDABLE)/examples/manifest_base.json",
 	"modules": {
 		"*": [
+			"./animals",
 			"./main"
 		]
+	},
+	"build": {
+		"NAME": "hello",
+		"BUILD": "$(BUILD_DIR)",
+		"MAKE_FRAGMENT": "make.genode.mk"
+	},
+	"creation": {
+		"static": 32768,
+		"chunk": {
+			"initial": 1536,
+			"incremental": 512
+		},
+		"heap": {
+			"initial": 512,
+			"incremental": 64
+		},
+		"stack": 256,
+		"keys": {
+			"available": 32,
+			"name": 53,
+			"symbol": 3
+		},
+		"parser": {
+			"buffer": 1024,
+			"table": 17
+		},
+		"main": "main"
 	}
 }

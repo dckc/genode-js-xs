@@ -1,20 +1,17 @@
-<runtime ram="300M" caps="100" binary="xst">
+<runtime ram="300M" caps="100" binary="hello">
   <config>
     <libc stdout="/dev/log" stderr="/dev/log"/>
     <vfs>
       <dir name="dev">
         <log/>
       </dir>
-      <inline name="inline.js">print(123)</inline>
-      <rom name="main.js" binary="false"/>
     </vfs>
-    <arg value="xst"/>
+    <arg value="hello"/>
     <arg value="main.js"/>
     <arg value="inline.js"/>
   </config>
   <content>
-    <rom label="xst"/>
-    <rom label="main.js"/>
+    <rom label="hello"/>
     <rom label="libc.lib.so"/>
     <rom label="libm.lib.so"/>
     <rom label="posix.lib.so"/>
