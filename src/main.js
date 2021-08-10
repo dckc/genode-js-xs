@@ -1,6 +1,5 @@
-function main() {
+/* global trace */
+export default function main() {
     let message = "Hello, world - sample";
-    print(message + "\n");
+    trace(message + "\n");
 }
-
-main();

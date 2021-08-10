@@ -5,8 +5,6 @@
       <dir name="dev">
         <log/>
       </dir>
-      <inline name="inline.js">trace(123)</inline>
-      <rom name="main.js" binary="false"/>
     </vfs>
     <arg value="hello"/>
     <arg value="main.js"/>
@@ -14,7 +12,6 @@
   </config>
   <content>
     <rom label="hello"/>
-    <rom label="main.js"/>
     <rom label="libc.lib.so"/>
     <rom label="libm.lib.so"/>
     <rom label="posix.lib.so"/>
