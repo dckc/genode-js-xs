@@ -39,12 +39,7 @@ git submodule update
 export PATH=vendor/goa/bin:$PATH
 ```
 
-Then apply `vendor/moddable-xst.patch`. (see
-[issues/8](https://github.com/dckc/genode-js-xs/issues/8)).
-
-
 When we `goa build`, we see some harmless compiler warnings from XS.
-And we get linker warnings (see [Issue \#9](https://github.com/dckc/genode-js-xs/issues/9)).
 
 ```
 genode-js-xs$ goa build
