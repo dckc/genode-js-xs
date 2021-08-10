@@ -33,7 +33,7 @@ XS_DIRECTORIES = \
 	$(XS_DIR)/sources
 
 XS_HEADERS = \
-	$(XS_DIR)/platforms/wasm_xs.h \
+	$(BUILD_DIR)/genode_xs.h \
 	$(XS_DIR)/platforms/xsPlatform.h \
 	$(XS_DIR)/includes/xs.h \
 	$(XS_DIR)/includes/xsmc.h \
@@ -43,7 +43,6 @@ XS_HEADERS = \
 
 XS_OBJECTS = \
 	$(LIB_DIR)/genode.c.o \
-	$(LIB_DIR)/wasm_xs.c.o \
 	$(LIB_DIR)/xsAll.c.o \
 	$(LIB_DIR)/xsAPI.c.o \
 	$(LIB_DIR)/xsArguments.c.o \
@@ -94,7 +93,7 @@ C_DEFINES = \
 	-DmxUseDefaultCStackLimit=0 \
 	-DXS_ARCHIVE=1 \
 	-DINCLUDE_XSPLATFORM=1 \
-	-DXSPLATFORM=\"wasm_xs.h\" \
+	-DXSPLATFORM=\"$(BUILD_DIR)/genode_xs.h\" \
 	-DmxRun=1 \
 	-DmxParse=1 \
 	-DmxNoFunctionLength=1 \
@@ -113,7 +112,8 @@ XS_C_FLAGS = -c $(CFLAGS)
 ifeq ($(DEBUG),)
 	XS_C_FLAGS += -D_RELEASE=1 -O3
 else
-	XS_C_FLAGS += -D_DEBUG=1 -DmxDebug=1 -g -O0 -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter
+	XS_C_FLAGS += -D_DEBUG=1 -g -O0 -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter
+# -DmxDebug=1
 #	C_FLAGS += -DMC_MEMORY_DEBUG=1
 endif
 C_FLAGS = $(XS_C_FLAGS)

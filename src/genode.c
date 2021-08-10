@@ -5,26 +5,22 @@
 #include "xsScript.h"
 #include "mc.xs.h"
 
-void fxAbort(xsMachine* the, int status)
-{
-  fprintf(stderr, "fxAbort(the=%p, status=%d).\n", the, status);
-  exit(status);
-}
+typedef struct sxJob txJob;
+typedef void (*txJobCallback)(txJob*);
 
-char* fxCStackLimit()
-{
-  pthread_attr_t attrs;
+struct sxJob {
+	txJob* next;
+	txMachine* the;
+	// TODO: setTimeout and friends
+	// txNumber when;
+	txJobCallback callback;
+	txSlot function;
+	txSlot argument;
+	txNumber interval;
+};
 
-  if (pthread_attr_init(&attrs) == 0) {
-    void *stackAddr = C_NULL;
-    size_t stacksize = 0;
-    if (pthread_attr_getstacksize(&attrs, &stacksize) == 0) {
-      return (char*)stackAddr + (4 * 1024);
-    }
-  }
-  return C_NULL;
-}
-
+static void fxQueuePromiseJobsCallback(txJob* job);
+static void fxRunLoop(txMachine* the);
 
 int main(int argc, char* argv[])  // here
 {
@@ -54,22 +50,6 @@ int main(int argc, char* argv[])  // here
 					exit(xsToInteger(xsVar(2)));
 				}
 				// printf(" lin_xs_cli: main() returned a promise; entering event loop\n");
-
-#if MAIN_LOOP_TODO
-				GMainContext *mainctx = g_main_context_default();
-				while (the->promiseJobsFlag || fxPromiseIsPending(the, &xsVar(2))) {
-					while (the->promiseJobsFlag) {
-						the->promiseJobsFlag = 0;
-						fxRunPromiseJobs(the);
-					}
-					g_main_context_iteration(mainctx, TRUE);
-				}
-				if (fxPromiseIsRejected(the, &xsVar(2))) {
-					error = 1;
-				}
-				// ISSUE: g_main_context_unref(mainctx); causes xsDeleteMachine() below
-				//        to hang in g_main_context_find_source_by_id() aquiring a lock.
-#endif
 			}
 			xsCatch {
 				xsStringValue message = xsToString(xsException);
@@ -79,8 +59,93 @@ int main(int argc, char* argv[])  // here
 		}
 	}
 	xsEndHost(the);
+	fxRunLoop(machine);
 	xsDeleteMachine(machine);
 	return error;
+}
+
+
+void fxAbort(xsMachine* the, int status)
+{
+  fprintf(stderr, "fxAbort(the=%p, status=%d).\n", the, status);
+  exit(status);
+}
+
+char* fxCStackLimit()
+{
+  pthread_attr_t attrs;
+
+  if (pthread_attr_init(&attrs) == 0) {
+    void *stackAddr = C_NULL;
+    size_t stacksize = 0;
+    if (pthread_attr_getstacksize(&attrs, &stacksize) == 0) {
+      return (char*)stackAddr + (4 * 1024);
+    }
+  }
+  return C_NULL;
+}
+
+
+void fxCreateMachinePlatform(txMachine* the)
+{
+	the->host = NULL;
+}
+
+void fxDeleteMachinePlatform(txMachine* the)
+{
+}
+
+
+void fxQueuePromiseJobs(txMachine* the)
+{
+	// c_timeval tv;
+	txJob* job;
+	txJob** address = (txJob**)&(the->context);
+	while ((job = *address))
+		address = &(job->next);
+	job = *address = malloc(sizeof(txJob));
+    c_memset(job, 0, sizeof(txJob));
+    job->the = the;
+    job->callback = fxQueuePromiseJobsCallback;
+	// c_gettimeofday(&tv, NULL);
+	// job->when = ((txNumber)(tv.tv_sec) * 1000.0) + ((txNumber)(tv.tv_usec) / 1000.0);
+}
+
+void fxQueuePromiseJobsCallback(txJob* job)
+{
+	txMachine* the = job->the;
+	fxRunPromiseJobs(the);
+}
+
+
+void fxRunLoop(txMachine* the)
+{
+	// c_timeval tv;
+	// txNumber when;
+	txJob* job;
+	txJob** address;
+
+	for (;;) {
+		// c_gettimeofday(&tv, NULL);
+		// when = ((txNumber)(tv.tv_sec) * 1000.0) + ((txNumber)(tv.tv_usec) / 1000.0);
+		address = (txJob**)&(the->context);
+		if (!*address)
+			break;
+		while ((job = *address)) {
+			if (1 /* job->when <= when */) {
+				(*job->callback)(job);
+				// if (job->interval) {
+				// 	job->when += job->interval;
+				// }
+				// else {
+					*address = job->next;
+					c_free(job);
+				// }
+			}
+			else
+				address = &(job->next);
+		}
+	}
 }
 
 // Local Variables:
