@@ -43,17 +43,17 @@ int main(int argc, char* argv[])  // here
 					xsSetAt(xsVar(0), xsInteger(argi - 1), xsString(argv[argi]));
 				}
 
-				printf("lin_xs_cli: loading top-level main.js\n");
+				// printf("lin_xs_cli: loading top-level main.js\n");
 				xsVar(1) = xsAwaitImport("main", XS_IMPORT_DEFAULT);
-				printf(" lin_xs_cli: loaded\n");
+				// printf(" lin_xs_cli: loaded\n");
 
-				printf("lin_xs_cli: invoking main(argv)\n");
+				// printf("lin_xs_cli: invoking main(argv)\n");
 				xsVar(2) = xsCallFunction1(xsVar(1), xsUndefined, xsVar(0));
 				if (!xsIsInstanceOf(xsVar(2), xsPromisePrototype)) {
-					fprintf(stderr, "main() returned immediate value (not a promise). exiting\n");
+					// fprintf(stderr, "main() returned immediate value (not a promise). exiting\n");
 					exit(xsToInteger(xsVar(2)));
 				}
-				printf(" lin_xs_cli: main() returned a promise; entering event loop\n");
+				// printf(" lin_xs_cli: main() returned a promise; entering event loop\n");
 
 #if MAIN_LOOP_TODO
 				GMainContext *mainctx = g_main_context_default();
