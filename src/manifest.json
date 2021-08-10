@@ -2,6 +2,9 @@
 	"modules": {
 		"*": [
 			"./animals",
+			"./FFI",
+			"./FFImod",
+			"./FFIgenode",
 			"./main"
 		]
 	},
