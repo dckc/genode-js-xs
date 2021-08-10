@@ -7,11 +7,33 @@
         <log/>
       </dir>
     </vfs>
+  <!-- TODO: binary="init" caps="5000" config="js-xs.config" -->
+  <!-- TODO:
+  <requires>
+    <nitpicker/>
+    <timer/>
+  </requires>
+      <route>
+          <any-service> <parent/> </any-service>
+      </route>
+  -->
+  <!-- TODO: upgrade nitpicker to gui -->
+
   </config>
   <content>
     <rom label="hello"/>
     <rom label="libc.lib.so"/>
     <rom label="libm.lib.so"/>
     <rom label="vfs.lib.so"/>
+
+    <!-- TODO:
+    <rom label="terminal"/>
+    <rom label="nit_fb"/>
+    <rom label="vfs"/>
+    <rom label="VeraMono.ttf"/>
+    <rom label="vfs_ttf.lib.so"/>
+    <rom label="js-xs.config"/>
+    <rom label="terminal.config"/>
+    -->
   </content>
 </runtime>

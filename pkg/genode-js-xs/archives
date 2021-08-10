@@ -1,2 +1,6 @@
 nfeske/src/libc
 nfeske/src/vfs
+nfeske/pkg/terminal
+nfeske/src/nit_fb
+nfeske/raw/ttf-bitstream-vera-minimal
+nfeske/src/vfs_ttf
