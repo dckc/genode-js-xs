@@ -45,7 +45,7 @@ build: $(GEN_SRC)/makefile
 		BUILD_DIR=$(BUILD_DIR) \
 		MODDABLE=$(MODDABLE) \
 		MODDABLE_TOOLS_DIR=$(MODDABLE_TOOLS_DIR) \
-		CC="$(CC) $(CPPFLAGS) $(HINTS) $(LDFLAGS) $(LDLIBS)"
+		CC="$(CC) $(CPPFLAGS) $(HINTS)"
 
 gen_src: $(GEN_SRC)/makefile
 
