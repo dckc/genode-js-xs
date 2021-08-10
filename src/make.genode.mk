@@ -91,6 +91,7 @@ XS_OBJECTS = \
 HEADERS += $(XS_HEADERS)
 
 C_DEFINES = \
+	-DmxUseDefaultCStackLimit=0 \
 	-DXS_ARCHIVE=1 \
 	-DINCLUDE_XSPLATFORM=1 \
 	-DXSPLATFORM=\"wasm_xs.h\" \

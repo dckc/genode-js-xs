@@ -11,6 +11,21 @@ void fxAbort(xsMachine* the, int status)
   exit(status);
 }
 
+char* fxCStackLimit()
+{
+  pthread_attr_t attrs;
+
+  if (pthread_attr_init(&attrs) == 0) {
+    void *stackAddr = C_NULL;
+    size_t stacksize = 0;
+    if (pthread_attr_getstacksize(&attrs, &stacksize) == 0) {
+      return (char*)stackAddr + (4 * 1024);
+    }
+  }
+  return C_NULL;
+}
+
+
 int main(int argc, char* argv[])  // here
 {
 	int error = 0;
