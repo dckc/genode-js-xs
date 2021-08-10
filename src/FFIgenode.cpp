@@ -1,4 +1,6 @@
+#include <base/log.h>
+
 extern "C"
-int stuff() {
-    return 123;
+void genode_log(const char* message) {
+    Genode::log(message);
 }

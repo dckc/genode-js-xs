@@ -1,8 +1,10 @@
 #include "xs.h"
 
-extern int stuff();
+// see FFIgenode.cpp
+extern void genode_log();
 
 void xs_fun(xsMachine *the)
 {
-    xsResult = xsInteger(stuff());
+    const char* message = xsToString(xsArg(0));
+    genode_log(message);
 }

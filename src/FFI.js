@@ -1,1 +1,1 @@
-export function fun() @ "xs_fun";
+export function fun(message) @ "xs_fun";

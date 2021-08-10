@@ -9,5 +9,6 @@ export default async function main() {
     const dogSays = await animals.bark();
     trace('dog says ', dogSays, '\n');
 
-    trace('FFI is:', fun(), '\n');
+    trace('genode logging:\n');
+    fun("js to genode");
 }
