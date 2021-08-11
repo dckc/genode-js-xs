@@ -8,15 +8,26 @@ genode-js-xs$ goa run
 [genode-js-xs:make] BUILD_DIR=/home/connolly/projects/genode-js-xs/var/build/x86_64
 [genode-js-xs:make] MODDABLE=/home/connolly/projects/genode-js-xs/vendor/moddable
 make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
-[genode-js-xs:make] # xsl modules
-### 572 instances, 453 keys, 61 colors, 20 holes
-Genode 20.02-1-gac1b2ec24e
+Genode sculpt-21.03-24-g704bd0695f8 <local changes>
 17592186044415 MiB RAM and 8997 caps assigned to init
-[init -> genode-js-xs] Hello, world - sample
-[init -> genode-js-xs] Warning: rtc not configured, returning 0
-[init -> genode-js-xs] dog says bark
-Warning: blocking canceled in entrypoint constructor
-[init] child "genode-js-xs" exited with exit value 0
+[init -> genode-js-xs] parent provides
+[init -> genode-js-xs]   service "ROM"
+[init -> genode-js-xs]   service "LOG"
+[init -> genode-js-xs]   service "RM"
+[init -> genode-js-xs]   service "CPU"
+[init -> genode-js-xs]   service "PD"
+[init -> genode-js-xs]   service "Timer"
+[init -> genode-js-xs] child "hello"
+[init -> genode-js-xs]   RAM quota:  204552K
+[init -> genode-js-xs]   cap quota:  66
+[init -> genode-js-xs]   ELF binary: hello
+[init -> genode-js-xs]   priority:   0
+[init -> genode-js-xs -> hello] Hello, world - sample
+[init -> genode-js-xs -> hello] dog says bark
+[init -> genode-js-xs -> hello] genode logging:
+[init -> genode-js-xs -> hello] js to genode
+[init -> genode-js-xs] child "hello" exited with exit value 0
+Expect: 'interact' received 'strg+c' and was cancelled
 ```
 
 [xst]: https://github.com/Moddable-OpenSource/moddable/blob/public/documentation/xs/xst.md
@@ -43,81 +54,95 @@ When we `goa build`, we see some harmless compiler warnings from XS.
 
 ```
 genode-js-xs$ goa build
-download nfeske/api/base/2020-02-27.tar.xz
-download nfeske/api/base/2020-02-27.tar.xz.sig
-...
+download nfeske/api/base/2021-02-22.tar.xz
+download nfeske/api/base/2021-02-22.tar.xz.sig
+download nfeske/api/libc/2021-02-22.tar.xz
+download nfeske/api/libc/2021-02-22.tar.xz.sig
 [genode-js-xs:make] BUILD_DIR=/home/connolly/projects/genode-js-xs/var/build/x86_64
 [genode-js-xs:make] MODDABLE=/home/connolly/projects/genode-js-xs/vendor/moddable
 make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
+[genode-js-xs:make] # xsc FFI.xsb
 [genode-js-xs:make] # xsc main.xsb
+[genode-js-xs:make] # xsid FFIgenode.cpp.xsi
+[genode-js-xs:make] # cc xsAll.c
+[genode-js-xs:make] # cc xsDataView.c
 [genode-js-xs:make] # cc xsArguments.c
-[genode-js-xs:make] # cc xsArray.c
 ...
+[genode-js-xs:make] # cc xsType.c
 [genode-js-xs:make] # xsl modules
-/home/connolly/projects/genode-js-xs/vendor/moddable/xs/sources/xsDebug.c:2211:20: warning: ‘xsInstrumentUnits’ defined but not used [-Wunused-const-variable=]
- static char* const xsInstrumentUnits[xsInstrumentCount] ICACHE_XS6STRING_ATTR = {
-                    ^~~~~~~~~~~~~~~~~
-...
-### 572 instances, 453 keys, 61 colors, 20 holes
-### 572 instances, 453 keys, 61 colors, 20 holes
-Total resource size: 0 bytes
-[genode-js-xs:make] # cc genode.c
-[genode-js-xs:make] # cc mc.resources.c
+/home/connolly/projects/genode-js-xs/vendor/moddable/xs/sources/xsAPI.c: In function ‘fxToUnsigned’:
+/home/connolly/projects/genode-js-xs/vendor/moddable/xs/sources/xsAPI.c:371:25: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   theSlot->value.number = theSlot->value.integer;
+   ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+[genode-js-xs:make] # cc FFIgenode.cpp.o
+[genode-js-xs:make] # cc FFImod.c.o
 [genode-js-xs:make] # cc mc.xs.c
-...
+[genode-js-xs:make] # cc genode.c
 [genode-js-xs:make] # cc hello
 ```
 
 The first `goa run` involves downloading various genode archives:
 
 ```
-genode-js-xs$ goa run
+
+(base) ~/projects/genode-js-xs
+20:24 connolly@jambox$ goa run
 [genode-js-xs:make] BUILD_DIR=/home/connolly/projects/genode-js-xs/var/build/x86_64
 [genode-js-xs:make] MODDABLE=/home/connolly/projects/genode-js-xs/vendor/moddable
 make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
-download nfeske/bin/x86_64/base-linux/2020-02-27.tar.xz
-download nfeske/bin/x86_64/base-linux/2020-02-27.tar.xz.sig
-download nfeske/bin/x86_64/init/2020-02-27.tar.xz
-download nfeske/bin/x86_64/init/2020-02-27.tar.xz.sig
-download nfeske/bin/x86_64/libc/2020-02-27.tar.xz
-download nfeske/bin/x86_64/libc/2020-02-27.tar.xz.sig
-download nfeske/bin/x86_64/posix/2020-02-27.tar.xz
-download nfeske/bin/x86_64/posix/2020-02-27.tar.xz.sig
-download nfeske/bin/x86_64/vfs/2020-02-27.tar.xz
-download nfeske/bin/x86_64/vfs/2020-02-27.tar.xz.sig
-download nfeske/src/base-linux/2020-02-27.tar.xz
-download nfeske/src/base-linux/2020-02-27.tar.xz.sig
-download nfeske/src/init/2020-02-27.tar.xz
-download nfeske/src/init/2020-02-27.tar.xz.sig
-download nfeske/src/libc/2020-02-27.tar.xz
-download nfeske/src/libc/2020-02-27.tar.xz.sig
-download nfeske/src/posix/2020-02-27.tar.xz
-download nfeske/src/posix/2020-02-27.tar.xz.sig
-download nfeske/src/vfs/2020-02-27.tar.xz
-download nfeske/src/vfs/2020-02-27.tar.xz.sig
-download nfeske/api/block_session/2020-02-27.tar.xz
-download nfeske/api/block_session/2020-02-27.tar.xz.sig
-download nfeske/api/file_system_session/2019-11-18.tar.xz
-download nfeske/api/file_system_session/2019-11-18.tar.xz.sig
-download nfeske/api/os/2020-02-27.tar.xz
-download nfeske/api/os/2020-02-27.tar.xz.sig
-download nfeske/api/report_session/2019-02-25.tar.xz
-download nfeske/api/report_session/2019-02-25.tar.xz.sig
-download nfeske/api/rtc_session/2019-08-20.tar.xz
-download nfeske/api/rtc_session/2019-08-20.tar.xz.sig
-download nfeske/api/so/2019-02-25.tar.xz
-download nfeske/api/so/2019-02-25.tar.xz.sig
-download nfeske/api/terminal_session/2019-02-25.tar.xz
-download nfeske/api/terminal_session/2019-02-25.tar.xz.sig
-download nfeske/api/timer_session/2019-11-25.tar.xz
-download nfeske/api/timer_session/2019-11-25.tar.xz.sig
-download nfeske/api/vfs/2020-02-27.tar.xz
-download nfeske/api/vfs/2020-02-27.tar.xz.sig
-Genode 20.02-1-gac1b2ec24e
+download nfeske/bin/x86_64/base-linux/2021-06-08.tar.xz
+download nfeske/bin/x86_64/base-linux/2021-06-08.tar.xz.sig
+download nfeske/bin/x86_64/init/2021-02-22.tar.xz
+download nfeske/bin/x86_64/init/2021-02-22.tar.xz.sig
+download nfeske/bin/x86_64/libc/2021-02-22.tar.xz
+download nfeske/bin/x86_64/libc/2021-02-22.tar.xz.sig
+download nfeske/bin/x86_64/vfs/2021-02-22.tar.xz
+download nfeske/bin/x86_64/vfs/2021-02-22.tar.xz.sig
+download nfeske/src/base-linux/2021-06-08.tar.xz
+download nfeske/src/base-linux/2021-06-08.tar.xz.sig
+download nfeske/src/init/2021-02-22.tar.xz
+download nfeske/src/init/2021-02-22.tar.xz.sig
+download nfeske/src/libc/2021-02-22.tar.xz
+download nfeske/src/libc/2021-02-22.tar.xz.sig
+download nfeske/src/vfs/2021-02-22.tar.xz
+download nfeske/src/vfs/2021-02-22.tar.xz.sig
+download nfeske/api/block_session/2020-05-26.tar.xz
+download nfeske/api/block_session/2020-05-26.tar.xz.sig
+download nfeske/api/file_system_session/2020-05-26.tar.xz
+download nfeske/api/file_system_session/2020-05-26.tar.xz.sig
+download nfeske/api/os/2021-02-22.tar.xz
+download nfeske/api/os/2021-02-22.tar.xz.sig
+download nfeske/api/report_session/2020-03-25.tar.xz
+download nfeske/api/report_session/2020-03-25.tar.xz.sig
+download nfeske/api/rtc_session/2020-03-25.tar.xz
+download nfeske/api/rtc_session/2020-03-25.tar.xz.sig
+download nfeske/api/so/2020-05-17.tar.xz
+download nfeske/api/so/2020-05-17.tar.xz.sig
+download nfeske/api/terminal_session/2020-04-16.tar.xz
+download nfeske/api/terminal_session/2020-04-16.tar.xz.sig
+download nfeske/api/timer_session/2020-10-08.tar.xz
+download nfeske/api/timer_session/2020-10-08.tar.xz.sig
+download nfeske/api/vfs/2020-11-26.tar.xz
+download nfeske/api/vfs/2020-11-26.tar.xz.sig
+Genode sculpt-21.03-24-g704bd0695f8 <local changes>
 17592186044415 MiB RAM and 8997 caps assigned to init
-[init -> genode-js-xs] Hello, world - sample
-[init -> genode-js-xs] Warning: rtc not configured, returning 0
-[init -> genode-js-xs] dog says bark
-Warning: blocking canceled in entrypoint constructor
-[init] child "genode-js-xs" exited with exit value 0
+[init -> genode-js-xs] parent provides
+[init -> genode-js-xs]   service "ROM"
+[init -> genode-js-xs]   service "LOG"
+[init -> genode-js-xs]   service "RM"
+[init -> genode-js-xs]   service "CPU"
+[init -> genode-js-xs]   service "PD"
+[init -> genode-js-xs]   service "Timer"
+[init -> genode-js-xs] child "hello"
+[init -> genode-js-xs]   RAM quota:  204552K
+[init -> genode-js-xs]   cap quota:  66
+[init -> genode-js-xs]   ELF binary: hello
+[init -> genode-js-xs]   priority:   0
+[init -> genode-js-xs -> hello] Hello, world - sample
+[init -> genode-js-xs -> hello] dog says bark
+[init -> genode-js-xs -> hello] genode logging:
+[init -> genode-js-xs -> hello] js to genode
+[init -> genode-js-xs] child "hello" exited with exit value 0
+Expect: 'interact' received 'strg+c' and was cancelled
+
 ```
