@@ -1,15 +1,8 @@
-<runtime ram="300M" caps="100" binary="hello">
-  <config verbose="yes">
-    <libc stdout="/dev/log" stderr="/dev/log" rtc="/dev/null" />
-    <vfs>
-      <dir name="dev">
-        <null/>
-        <log/>
-      </dir>
-    </vfs>
-  </config>
+<runtime ram="300M" caps="100" binary="hello" config="js-xs.config">
+
   <content>
     <rom label="hello"/>
+    <rom label="js-xs.config"/>
     <rom label="libc.lib.so"/>
     <rom label="libm.lib.so"/>
     <rom label="vfs.lib.so"/>
