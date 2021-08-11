@@ -4,3 +4,4 @@
 # https://depot.genode.org/genodelabs/src/
 genodelabs/api/base
 genodelabs/api/libc
+genodelabs/api/os

@@ -12,6 +12,7 @@
     <rom label="linux_nic_drv" />
     <rom label="vfs_lxip.lib.so" />
     <rom label="lxip.lib.so" />
+    <rom label="sandbox.lib.so" />
 
   </content>
 </runtime>
