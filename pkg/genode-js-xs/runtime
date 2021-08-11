@@ -1,4 +1,4 @@
-<runtime ram="300M" caps="100" binary="hello" config="js-xs.config">
+<runtime ram="300M" caps="5000" binary="init" config="js-xs.config">
 
   <content>
     <rom label="hello"/>
