@@ -19,6 +19,8 @@ struct sxJob {
 	txNumber interval;
 };
 
+extern void applyConfig(xsMachine *the); // see FFImod.c
+
 static void fxQueuePromiseJobsCallback(txJob* job);
 static void fxRunLoop(txMachine* the);
 
@@ -26,25 +28,29 @@ int main(int argc, char* argv[])  // here
 {
 	int error = 0;
 
-	xsMachine* machine = fxPrepareMachine(NULL, xsPreparation(), "tool", NULL, NULL);
+	xsMachine* machine = fxPrepareMachine(NULL, xsPreparation(), argv[0], NULL, NULL);
 
 	xsBeginHost(machine);
 	{
-		xsVars(3);
+		xsVars(5);
 		{
 			xsTry {
-				int argi;
-				xsVar(0) = xsNewArray(0);
-				for (argi = 1; argi < argc; argi++) {
-					xsSetAt(xsVar(0), xsInteger(argi - 1), xsString(argv[argi]));
+				if (argc != -1) {
+					xsRangeError("expected argc == -1 to signal novel use of argv");
 				}
+				xsVar(0) = xsNewObject();
+				xsVar(4) = xsNewHostFunction(applyConfig, 1);
+				xsVar(3) = xsNewHostObject(NULL);
+				xsSetHostData(xsVar(3), argv[0]);
+				xsDefine(xsVar(0), xsID("sandbox"), xsVar(3), xsDontSet);
+				xsDefine(xsVar(3), xsID("applyConfig"), xsVar(4), xsDontSet);
 
 				// printf("lin_xs_cli: loading top-level main.js\n");
 				xsVar(1) = xsAwaitImport("main", XS_IMPORT_DEFAULT);
 				// printf(" lin_xs_cli: loaded\n");
 
 				// printf("lin_xs_cli: invoking main(argv)\n");
-				xsVar(2) = xsCallFunction1(xsVar(1), xsUndefined, xsVar(0));
+				xsVar(2) = xsCallFunction2(xsVar(1), xsUndefined, xsVar(0), xsVar(3));
 				if (!xsIsInstanceOf(xsVar(2), xsPromisePrototype)) {
 					// fprintf(stderr, "main() returned immediate value (not a promise). exiting\n");
 					exit(xsToInteger(xsVar(2)));

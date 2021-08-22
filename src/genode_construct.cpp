@@ -7,6 +7,9 @@
 
 /* libc includes */
 #include <stdlib.h> /* 'exit'   */
+#include <stdio.h> /*@@debug fprintf*/
+
+#include "app.h"
 
 extern char **genode_argv;
 extern int genode_argc;
@@ -15,7 +18,6 @@ extern char **genode_envp;
 /* provided by the application */
 extern "C" int main(int argc, char **argv, char **envp);
 
-static char **no_args = {};
 static char **no_env = {};
 
 namespace App
@@ -40,7 +42,7 @@ struct App::Log_session_component : Session_object<Log_session>
     }
 };
 
-struct App::Main : Sandbox::Local_service_base::Wakeup
+struct App::Main : Sandbox::Local_service_base::Wakeup, App::HasSandbox
 {
     Env &_env;
 
@@ -97,9 +99,15 @@ struct App::Main : Sandbox::Local_service_base::Wakeup
         });
     }
 
-    void show(const char *message)
+    void show(const char *message) override
     {
         log(message);
+    }
+
+    void applyConfig(Xml_node const &config) override
+    {
+        fprintf(stderr, "applyConfig()\n");
+        _sandbox.apply_config(config);
     }
 
     Main(Env &env) : _env(env)
@@ -116,14 +124,19 @@ struct App::Main : Sandbox::Local_service_base::Wakeup
     }
 };
 
-static int construct_component(Libc::Env &env)
+App::HasSandbox *theApp;
+
+static int construct_component(Libc::Env &env, App::Main &app)
 {
     using Genode::Xml_node;
 
     env.config([&](Xml_node const &node) {
-        // never mind args, env for now
-        genode_argc = 0;
-        genode_argv = no_args;
+        // Squeeze app pointer thru argv
+        genode_argc = -1;
+        fprintf(stderr, "app: %p\n", &app);
+        static char *the_args[] = {reinterpret_cast<char*>(&app)};
+        theApp = &app;
+        genode_argv = (char**)the_args;
         genode_envp = no_env;
     });
     return main(genode_argc, genode_argv, genode_envp);
@@ -131,12 +144,12 @@ static int construct_component(Libc::Env &env)
 
 void Libc::Component::construct(Libc::Env &env)
 {
-    App::Main main(env);
+    App::Main app(env);
 
     Libc::with_libc([&]() {
-        main.show("@@construct!");
-        int result = construct_component(env);
-        main.show("@@print!");
+        app.show("@@construct!");
+        int result = construct_component(env, app);
+        app.show("@@print!");
         exit(result);
     });
 }
