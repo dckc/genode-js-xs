@@ -1,0 +1,11 @@
+set version(chelmuth/api/base) 2021-05-27
+set version(chelmuth/api/libc) 2021-05-04
+set version(chelmuth/src/vfs_lxip) 2021-05-27
+
+set version(genodelabs/api/base) 2021-02-22
+set version(genodelabs/api/libc) 2021-02-22
+# https://depot.genode.org/genodelabs/src/libc/2021-03-22.tar.xz.sig
+set version(genodelabs/src/libc) 2021-03-22
+set version(genodelabs/src/vfs) 2021-02-22
+# https://depot.genode.org/genodelabs/src/vfs_lxip/2021-04-26.tar.xz.sig
+set version(genodelabs/src/vfs_lxip) 2021-04-26

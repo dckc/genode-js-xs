@@ -1,2 +1,3 @@
-nfeske/src/libc
-nfeske/src/vfs
+genodelabs/src/libc
+genodelabs/src/vfs
+genodelabs/src/vfs_lxip

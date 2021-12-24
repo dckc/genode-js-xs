@@ -1,10 +1,17 @@
 <runtime ram="300M" caps="5000" binary="init" config="js-xs.config">
-
+  <requires>
+    <nic />
+  </requires>
   <content>
-    <rom label="hello"/>
-    <rom label="js-xs.config"/>
-    <rom label="libc.lib.so"/>
-    <rom label="libm.lib.so"/>
-    <rom label="vfs.lib.so"/>
+    <rom label="hello" />
+    <rom label="js-xs.config" />
+    <rom label="libc.lib.so" />
+    <rom label="libm.lib.so" />
+    <rom label="vfs.lib.so" />
+    <rom label="vfs" />
+    <rom label="linux_nic_drv" />
+    <rom label="vfs_lxip.lib.so" />
+    <rom label="lxip.lib.so" />
+
   </content>
 </runtime>

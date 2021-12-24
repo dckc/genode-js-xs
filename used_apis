@@ -1,4 +1,6 @@
 # nfeske=https://github.com/genodelabs/genode/tree/master/depot/nfeske
 #  -> https://depot.genode.org/nfeske/
-nfeske/api/base
-nfeske/api/libc
+# https://depot.genode.org/chelmuth/api/base/2021-05-27.tar.xz.sig
+# https://depot.genode.org/genodelabs/src/
+genodelabs/api/base
+genodelabs/api/libc
